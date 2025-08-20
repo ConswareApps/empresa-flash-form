@@ -1,0 +1,152 @@
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { CompanyFormData } from "../CompanyRegistrationForm";
+
+interface LegalRepresentativeStepProps {
+  data: CompanyFormData;
+  updateData: (data: Partial<CompanyFormData>) => void;
+  onNext: () => void;
+  onPrev: () => void;
+}
+
+export default function LegalRepresentativeStep({ 
+  data, 
+  updateData, 
+  onNext, 
+  onPrev 
+}: LegalRepresentativeStepProps) {
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const validateAndNext = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!data.representanteLegal.identificacion.trim()) {
+      newErrors.identificacion = "La identificación es requerida";
+    }
+    if (!data.representanteLegal.nombreCompleto.trim()) {
+      newErrors.nombreCompleto = "El nombre completo es requerido";
+    }
+    if (!data.representanteLegal.celular.trim()) {
+      newErrors.celular = "El celular es requerido";
+    }
+    if (!data.representanteLegal.correoElectronico.trim()) {
+      newErrors.correoElectronico = "El correo electrónico es requerido";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.representanteLegal.correoElectronico)) {
+      newErrors.correoElectronico = "El correo electrónico no es válido";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      onNext();
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    updateData({
+      representanteLegal: {
+        ...data.representanteLegal,
+        [field]: value
+      }
+    });
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: "" }));
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <Label htmlFor="rep-identificacion" className="text-sm font-medium text-consware-dark">
+          Número de Identificación *
+        </Label>
+        <Input
+          id="rep-identificacion"
+          type="text"
+          placeholder="1001918162"
+          value={data.representanteLegal.identificacion}
+          onChange={(e) => handleInputChange("identificacion", e.target.value)}
+          className={errors.identificacion ? "border-destructive" : ""}
+        />
+        {errors.identificacion && (
+          <p className="text-xs text-destructive">{errors.identificacion}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="rep-nombreCompleto" className="text-sm font-medium text-consware-dark">
+          Nombre Completo *
+        </Label>
+        <Input
+          id="rep-nombreCompleto"
+          type="text"
+          placeholder="DALUWI TORRES"
+          value={data.representanteLegal.nombreCompleto}
+          onChange={(e) => handleInputChange("nombreCompleto", e.target.value)}
+          className={errors.nombreCompleto ? "border-destructive" : ""}
+        />
+        {errors.nombreCompleto && (
+          <p className="text-xs text-destructive">{errors.nombreCompleto}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="rep-celular" className="text-sm font-medium text-consware-dark">
+          Celular *
+        </Label>
+        <Input
+          id="rep-celular"
+          type="tel"
+          placeholder="3104598210"
+          value={data.representanteLegal.celular}
+          onChange={(e) => handleInputChange("celular", e.target.value)}
+          className={errors.celular ? "border-destructive" : ""}
+        />
+        {errors.celular && (
+          <p className="text-xs text-destructive">{errors.celular}</p>
+        )}
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="rep-correoElectronico" className="text-sm font-medium text-consware-dark">
+          Correo Electrónico *
+        </Label>
+        <Input
+          id="rep-correoElectronico"
+          type="email"
+          placeholder="dtorres@consware.com.co"
+          value={data.representanteLegal.correoElectronico}
+          onChange={(e) => handleInputChange("correoElectronico", e.target.value)}
+          className={errors.correoElectronico ? "border-destructive" : ""}
+        />
+        {errors.correoElectronico && (
+          <p className="text-xs text-destructive">{errors.correoElectronico}</p>
+        )}
+      </div>
+
+      <div className="flex justify-between pt-4">
+        <Button 
+          variant="outline" 
+          onClick={onPrev}
+          className="border-consware-gray-border text-consware-gray-primary hover:bg-consware-gray-medium"
+        >
+          <ChevronLeft className="w-4 h-4 mr-2" />
+          Anterior
+        </Button>
+        
+        <Button 
+          onClick={validateAndNext}
+          className="bg-primary hover:bg-consware-green-active text-primary-foreground font-medium px-6"
+        >
+          Continuar
+          <ChevronRight className="w-4 h-4 ml-2" />
+        </Button>
+      </div>
+    </div>
+  );
+}

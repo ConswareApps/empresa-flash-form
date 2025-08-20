@@ -2,95 +2,105 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Design system para Consware - Montserrat + paleta de colores específica */
 
 @layer base {
   :root {
+    /* Colores primarios Consware */
+    --consware-green: 141 68% 37%;     /* #19a961 */
+    --consware-blue: 220 100% 28%;     /* #003f8f */
+    --consware-dark: 246 78% 7%;       /* #060418 */
+    
+    /* Colores secundarios */
+    --consware-green-secondary: 119 56% 59%;  /* #5ac75e */
+    --consware-green-button: 152 100% 37%;    /* #00be72 */
+    --consware-green-active: 139 76% 43%;     /* #1dbd66 */
+    --consware-red: 0 100% 42%;               /* #d9000d */
+    --consware-red-alt: 6 75% 58%;            /* #e84e40 */
+    
+    /* Grises */
+    --consware-gray-primary: 217 10% 48%;     /* #697279 */
+    --consware-gray-secondary: 216 14% 51%;   /* #6a707e */
+    --consware-gray-light: 236 27% 76%;       /* #bebace */
+    --consware-gray-dark: 245 15% 53%;        /* #74708d */
+    --consware-gray-medium: 216 24% 89%;      /* #e3e6ec */
+    --consware-gray-quaternary: 208 23% 93%;  /* #e7edf2 */
+    --consware-gray-border: 187 22% 77%;      /* #c4d0d5 */
+    
+    /* Fondos */
+    --consware-bg-green: 143 70% 37%;         /* #14aa61 */
+    --consware-bg-gray: 216 33% 96%;          /* #f2f4f8 */
+    --consware-bg-content: 210 38% 96%;       /* #f3f6f9 */
+    
+    /* Bootstrap theme colors adaptados */
+    --consware-success: 142 84% 38%;          /* #10b759 */
+    --consware-info: 180 66% 62%;             /* #66d1d1 */
+    --consware-warning: 49 98% 51%;           /* #fbbc06 */
+    --consware-danger: 344 100% 60%;          /* #ff3366 */
+    
+    /* Sistema de colores para componentes */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    --foreground: 246 78% 7%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
+    --card-foreground: 246 78% 7%;
+    
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
+    --popover-foreground: 246 78% 7%;
+    
+    --primary: 141 68% 37%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 216 33% 96%;
+    --secondary-foreground: 246 78% 7%;
+    
+    --muted: 216 24% 89%;
+    --muted-foreground: 217 10% 48%;
+    
+    --accent: 152 100% 37%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 100% 42%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 187 22% 77%;
+    --input: 187 22% 77%;
+    --ring: 141 68% 37%;
+    
     --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Gradientes */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--consware-green)), hsl(var(--consware-green-button)));
+    --gradient-card: linear-gradient(180deg, hsl(var(--background)), hsl(var(--consware-bg-gray)));
+    
+    /* Sombras */
+    --shadow-consware: 0 10px 30px -10px hsl(var(--consware-green) / 0.2);
+    --shadow-card: 0 4px 20px -4px hsl(var(--consware-gray-dark) / 0.1);
+    
+    /* Transiciones */
+    --transition-consware: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
-
+  
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 246 78% 7%;
+    --foreground: 0 0% 100%;
+    --card: 246 78% 7%;
+    --card-foreground: 0 0% 100%;
+    --popover: 246 78% 7%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 246 78% 7%;
+    --secondary: 245 15% 53%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 245 15% 53%;
+    --muted-foreground: 236 27% 76%;
+    --accent: 245 15% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 6 75% 58%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 245 15% 53%;
+    --input: 245 15% 53%;
+    --ring: 141 68% 37%;
   }
 }
 
@@ -100,6 +110,12 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
   }
 }
