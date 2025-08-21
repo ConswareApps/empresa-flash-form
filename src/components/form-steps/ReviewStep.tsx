@@ -34,6 +34,14 @@ export default function ReviewStep({ data, onSubmit, onPrev, isSubmitting }: Rev
             <span className="text-consware-gray-primary">Código Postal:</span>
             <p className="font-medium text-consware-dark">{data.codigoPostal}</p>
           </div>
+          <div>
+            <span className="text-consware-gray-primary">País:</span>
+            <p className="font-medium text-consware-dark">{data.pais}</p>
+          </div>
+          <div>
+            <span className="text-consware-gray-primary">Ciudad:</span>
+            <p className="font-medium text-consware-dark">{data.ciudad}</p>
+          </div>
           <div className="sm:col-span-2">
             <span className="text-consware-gray-primary">Dirección:</span>
             <p className="font-medium text-consware-dark">{data.direccion}, {data.barrio}</p>
