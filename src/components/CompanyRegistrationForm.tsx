@@ -17,6 +17,8 @@ export interface CompanyFormData {
   direccion: string;
   barrio: string;
   codigoPostal: string;
+  pais: string;
+  ciudad: string;
   representanteLegal: {
     identificacion: string;
     nombreCompleto: string;
@@ -40,6 +42,8 @@ const INITIAL_FORM_DATA: CompanyFormData = {
   direccion: "",
   barrio: "",
   codigoPostal: "",
+  pais: "",
+  ciudad: "",
   representanteLegal: {
     identificacion: "",
     nombreCompleto: "",

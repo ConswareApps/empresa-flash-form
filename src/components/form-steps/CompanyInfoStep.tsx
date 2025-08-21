@@ -38,6 +38,12 @@ export default function CompanyInfoStep({ data, updateData, onNext }: CompanyInf
     if (!data.codigoPostal.trim()) {
       newErrors.codigoPostal = "El código postal es requerido";
     }
+    if (!data.pais.trim()) {
+      newErrors.pais = "El país es requerido";
+    }
+    if (!data.ciudad.trim()) {
+      newErrors.ciudad = "La ciudad es requerida";
+    }
 
     setErrors(newErrors);
 
@@ -177,6 +183,42 @@ export default function CompanyInfoStep({ data, updateData, onNext }: CompanyInf
           />
           {errors.codigoPostal && (
             <p className="text-xs text-destructive">{errors.codigoPostal}</p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="pais" className="text-sm font-medium text-consware-dark">
+            País *
+          </Label>
+          <Input
+            id="pais"
+            type="text"
+            placeholder="Colombia"
+            value={data.pais}
+            onChange={(e) => handleInputChange("pais", e.target.value)}
+            className={errors.pais ? "border-destructive" : ""}
+          />
+          {errors.pais && (
+            <p className="text-xs text-destructive">{errors.pais}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="ciudad" className="text-sm font-medium text-consware-dark">
+            Ciudad *
+          </Label>
+          <Input
+            id="ciudad"
+            type="text"
+            placeholder="Bogotá"
+            value={data.ciudad}
+            onChange={(e) => handleInputChange("ciudad", e.target.value)}
+            className={errors.ciudad ? "border-destructive" : ""}
+          />
+          {errors.ciudad && (
+            <p className="text-xs text-destructive">{errors.ciudad}</p>
           )}
         </div>
       </div>
