@@ -8,7 +8,7 @@ import { CompanyFormData } from "../CompanyRegistrationForm";
 interface MasterUserStepProps {
   data: CompanyFormData;
   updateData: (data: Partial<CompanyFormData>) => void;
-  generateUsername: (nombreCompleto: string) => string;
+  generateUsername: (nombreEmpresa: string) => string;
   onNext: () => void;
   onPrev: () => void;
 }
@@ -22,10 +22,10 @@ export default function MasterUserStep({
 }: MasterUserStepProps) {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Auto-generate username when name changes
+  // Auto-generate username when company name changes
   useEffect(() => {
-    if (data.usuarioMaster.nombreCompleto) {
-      const newUsername = generateUsername(data.usuarioMaster.nombreCompleto);
+    if (data.nombreEmpresa) {
+      const newUsername = generateUsername(data.nombreEmpresa);
       updateData({
         usuarioMaster: {
           ...data.usuarioMaster,
@@ -33,7 +33,7 @@ export default function MasterUserStep({
         }
       });
     }
-  }, [data.usuarioMaster.nombreCompleto, generateUsername, updateData]);
+  }, [data.nombreEmpresa, generateUsername, updateData]);
 
   const validateAndNext = () => {
     const newErrors: Record<string, string> = {};
@@ -44,14 +44,12 @@ export default function MasterUserStep({
     if (!data.usuarioMaster.identificacion.trim()) {
       newErrors.identificacion = "La identificación es requerida";
     }
-    if (!data.usuarioMaster.celular.trim()) {
-      newErrors.celular = "El celular es requerido";
-    }
     if (!data.usuarioMaster.correo.trim()) {
       newErrors.correo = "El correo electrónico es requerido";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.usuarioMaster.correo)) {
       newErrors.correo = "El correo electrónico no es válido";
     }
+    // El celular es opcional, no se valida
 
     setErrors(newErrors);
 
@@ -82,7 +80,7 @@ export default function MasterUserStep({
           <h3 className="text-sm font-semibold text-consware-dark">Usuario Master</h3>
         </div>
         <p className="text-xs text-consware-gray-primary">
-          El usuario master tendrá acceso completo al sistema y podrá administrar toda la empresa.
+          El usuario master tendrá acceso completo al sistema y podrá administrar toda la empresa. Los campos están pre-rellenados con valores sugeridos.
         </p>
       </div>
 
@@ -93,7 +91,7 @@ export default function MasterUserStep({
         <Input
           id="master-nombreCompleto"
           type="text"
-          placeholder="ejemplomaster"
+          placeholder="Nombre del usuario administrador"
           value={data.usuarioMaster.nombreCompleto}
           onChange={(e) => handleInputChange("nombreCompleto", e.target.value)}
           className={errors.nombreCompleto ? "border-destructive" : ""}
@@ -110,7 +108,7 @@ export default function MasterUserStep({
         <Input
           id="master-identificacion"
           type="text"
-          placeholder="900230687"
+          placeholder="Identificación única del usuario"
           value={data.usuarioMaster.identificacion}
           onChange={(e) => handleInputChange("identificacion", e.target.value)}
           className={errors.identificacion ? "border-destructive" : ""}
@@ -122,12 +120,12 @@ export default function MasterUserStep({
 
       <div className="space-y-2">
         <Label htmlFor="master-celular" className="text-sm font-medium text-consware-dark">
-          Celular *
+          Celular
         </Label>
         <Input
           id="master-celular"
           type="tel"
-          placeholder="3104598210"
+          placeholder="Número de celular (opcional)"
           value={data.usuarioMaster.celular}
           onChange={(e) => handleInputChange("celular", e.target.value)}
           className={errors.celular ? "border-destructive" : ""}
@@ -144,7 +142,7 @@ export default function MasterUserStep({
         <Input
           id="master-correo"
           type="email"
-          placeholder="elpropiocv135@gmail.com"
+          placeholder="Correo electrónico del administrador"
           value={data.usuarioMaster.correo}
           onChange={(e) => handleInputChange("correo", e.target.value)}
           className={errors.correo ? "border-destructive" : ""}
@@ -166,7 +164,7 @@ export default function MasterUserStep({
           className="bg-consware-gray-medium text-consware-gray-primary"
         />
         <p className="text-xs text-consware-gray-primary">
-          Se genera automáticamente basado en el nombre: MASTER{'{NOMBRE_SIN_ESPACIOS}'}
+          Se genera automáticamente basado en el nombre de la empresa: MASTER{'{NOMBRE_EMPRESA_SIN_ESPACIOS}'}
         </p>
       </div>
 

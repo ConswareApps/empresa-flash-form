@@ -1,9 +1,13 @@
-import { useState } from "react";
+// Paso 1: Información de la empresa - Solo UI
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronRight } from "lucide-react";
-import { CompanyFormData } from "../CompanyRegistrationForm";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Building2, ChevronRight } from "lucide-react";
+import { CompanyFormData } from "@/types/company.types";
+import { CompanyUtils } from "@/utils/company.utils";
+import { COUNTRIES } from "@/constants/company.constants";
+import { useFormValidation } from "@/hooks/useFormValidation";
 
 interface CompanyInfoStepProps {
   data: CompanyFormData;
@@ -12,224 +16,163 @@ interface CompanyInfoStepProps {
 }
 
 export default function CompanyInfoStep({ data, updateData, onNext }: CompanyInfoStepProps) {
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const { clearFieldError, getStepErrors, validateStep } = useFormValidation(data);
+  const errors = getStepErrors(0);
 
   const validateAndNext = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!data.identificacion.trim()) {
-      newErrors.identificacion = "La identificación es requerida";
-    }
-    if (!data.nombreEmpresa.trim()) {
-      newErrors.nombreEmpresa = "El nombre de la empresa es requerido";
-    }
-    if (!data.digitoVerificador || data.digitoVerificador < 0 || data.digitoVerificador > 9) {
-      newErrors.digitoVerificador = "El dígito verificador debe ser entre 0 y 9";
-    }
-    if (!data.celular.trim()) {
-      newErrors.celular = "El celular es requerido";
-    }
-    if (!data.direccion.trim()) {
-      newErrors.direccion = "La dirección es requerida";
-    }
-    if (!data.barrio.trim()) {
-      newErrors.barrio = "El barrio es requerido";
-    }
-    if (!data.codigoPostal.trim()) {
-      newErrors.codigoPostal = "El código postal es requerido";
-    }
-    if (!data.pais.trim()) {
-      newErrors.pais = "El país es requerido";
-    }
-    if (!data.ciudad.trim()) {
-      newErrors.ciudad = "La ciudad es requerida";
-    }
-
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
+    const isValid = validateStep(0);
+    if (isValid) {
       onNext();
     }
   };
 
   const handleInputChange = (field: string, value: string | number) => {
-    updateData({ [field]: value });
+    const updates: any = { [field]: value };
+    
+    // Si se está actualizando el nombre de la empresa, también generar la versión sin espacios
+    if (field === "nombreEmpresa" && typeof value === "string") {
+      updates.nombreEmpresaSinEspacios = CompanyUtils.generateCompanyNameWithoutSpaces(value);
+    }
+    
+    updateData(updates);
+    
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      clearFieldError(0, field);
     }
   };
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-consware-green/10">
+          <Building2 className="h-5 w-5 text-consware-green" />
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold text-consware-dark">
+            Datos de la Empresa
+          </h2>
+          <p className="text-sm text-consware-gray-primary">
+            Ingrese la información básica
+          </p>
+        </div>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="identificacion" className="text-sm font-medium text-consware-dark">
-            NIT de la Empresa *
+          <Label htmlFor="identificacion">
+            Identificación de la Empresa *
           </Label>
           <Input
             id="identificacion"
             type="text"
-            placeholder="900230988"
+            placeholder="Ej: 900123456"
             value={data.identificacion}
             onChange={(e) => handleInputChange("identificacion", e.target.value)}
-            className={errors.identificacion ? "border-destructive" : ""}
+            className={errors.identificacion ? "border-red-500" : ""}
           />
           {errors.identificacion && (
-            <p className="text-xs text-destructive">{errors.identificacion}</p>
+            <p className="text-sm text-red-500">{errors.identificacion}</p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="digitoVerificador" className="text-sm font-medium text-consware-dark">
+          <Label htmlFor="digitoVerificador">
             Dígito Verificador *
           </Label>
           <Input
             id="digitoVerificador"
             type="number"
-            placeholder="5"
             min="0"
             max="9"
+            placeholder="0-9"
             value={data.digitoVerificador || ""}
             onChange={(e) => handleInputChange("digitoVerificador", parseInt(e.target.value) || 0)}
-            className={errors.digitoVerificador ? "border-destructive" : ""}
+            className={errors.digitoVerificador ? "border-red-500" : ""}
           />
           {errors.digitoVerificador && (
-            <p className="text-xs text-destructive">{errors.digitoVerificador}</p>
+            <p className="text-sm text-red-500">{errors.digitoVerificador}</p>
           )}
         </div>
-      </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="nombreEmpresa" className="text-sm font-medium text-consware-dark">
-          Nombre de la Empresa *
-        </Label>
-        <Input
-          id="nombreEmpresa"
-          type="text"
-          placeholder="EMPRESA DE EJEMPLO HO4.0"
-          value={data.nombreEmpresa}
-          onChange={(e) => handleInputChange("nombreEmpresa", e.target.value)}
-          className={errors.nombreEmpresa ? "border-destructive" : ""}
-        />
-        {errors.nombreEmpresa && (
-          <p className="text-xs text-destructive">{errors.nombreEmpresa}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="celular" className="text-sm font-medium text-consware-dark">
-          Celular de la Empresa *
-        </Label>
-        <Input
-          id="celular"
-          type="tel"
-          placeholder="3104598210"
-          value={data.celular}
-          onChange={(e) => handleInputChange("celular", e.target.value)}
-          className={errors.celular ? "border-destructive" : ""}
-        />
-        {errors.celular && (
-          <p className="text-xs text-destructive">{errors.celular}</p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="direccion" className="text-sm font-medium text-consware-dark">
-          Dirección *
-        </Label>
-        <Input
-          id="direccion"
-          type="text"
-          placeholder="Calle 123 # 45-67"
-          value={data.direccion}
-          onChange={(e) => handleInputChange("direccion", e.target.value)}
-          className={errors.direccion ? "border-destructive" : ""}
-        />
-        {errors.direccion && (
-          <p className="text-xs text-destructive">{errors.direccion}</p>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="barrio" className="text-sm font-medium text-consware-dark">
-            Barrio *
+        <div className="space-y-2 md:col-span-2">
+          <Label htmlFor="nombreEmpresa">
+            Nombre de la Empresa *
           </Label>
           <Input
-            id="barrio"
+            id="nombreEmpresa"
             type="text"
-            placeholder="LA LIS"
-            value={data.barrio}
-            onChange={(e) => handleInputChange("barrio", e.target.value)}
-            className={errors.barrio ? "border-destructive" : ""}
+            placeholder="Ej: Mi Empresa S.A.S"
+            value={data.nombreEmpresa}
+            onChange={(e) => handleInputChange("nombreEmpresa", e.target.value)}
+            className={errors.nombreEmpresa ? "border-red-500" : ""}
           />
-          {errors.barrio && (
-            <p className="text-xs text-destructive">{errors.barrio}</p>
+          {errors.nombreEmpresa && (
+            <p className="text-sm text-red-500">{errors.nombreEmpresa}</p>
+          )}
+          {data.nombreEmpresaSinEspacios && (
+            <p className="text-xs text-consware-gray-primary">
+              Nombre sin espacios: <span className="font-mono">{data.nombreEmpresaSinEspacios}</span>
+            </p>
           )}
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="codigoPostal" className="text-sm font-medium text-consware-dark">
-            Código Postal *
+          <Label htmlFor="celular">
+            Celular de la Empresa *
           </Label>
           <Input
-            id="codigoPostal"
-            type="text"
-            placeholder="123123"
-            value={data.codigoPostal}
-            onChange={(e) => handleInputChange("codigoPostal", e.target.value)}
-            className={errors.codigoPostal ? "border-destructive" : ""}
+            id="celular"
+            type="tel"
+            placeholder="3001234567"
+            maxLength={10}
+            value={data.celular}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, '');
+              handleInputChange("celular", value);
+            }}
+            className={errors.celular ? "border-red-500" : ""}
           />
-          {errors.codigoPostal && (
-            <p className="text-xs text-destructive">{errors.codigoPostal}</p>
+          {errors.celular && (
+            <p className="text-sm text-red-500">{errors.celular}</p>
           )}
+          <p className="text-xs text-consware-gray-primary">
+            Ingrese 10 dígitos sin espacios ni guiones
+          </p>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="pais" className="text-sm font-medium text-consware-dark">
+          <Label htmlFor="pais">
             País *
           </Label>
-          <Input
-            id="pais"
-            type="text"
-            placeholder="Colombia"
+          <Select
             value={data.pais}
-            onChange={(e) => handleInputChange("pais", e.target.value)}
-            className={errors.pais ? "border-destructive" : ""}
-          />
+            onValueChange={(value) => handleInputChange("pais", value)}
+          >
+            <SelectTrigger className={errors.pais ? "border-red-500" : ""}>
+              <SelectValue placeholder="Seleccione un país" />
+            </SelectTrigger>
+            <SelectContent>
+              {COUNTRIES.map((country) => (
+                <SelectItem key={country.value} value={country.value}>
+                  {country.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           {errors.pais && (
-            <p className="text-xs text-destructive">{errors.pais}</p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="ciudad" className="text-sm font-medium text-consware-dark">
-            Ciudad *
-          </Label>
-          <Input
-            id="ciudad"
-            type="text"
-            placeholder="Bogotá"
-            value={data.ciudad}
-            onChange={(e) => handleInputChange("ciudad", e.target.value)}
-            className={errors.ciudad ? "border-destructive" : ""}
-          />
-          {errors.ciudad && (
-            <p className="text-xs text-destructive">{errors.ciudad}</p>
+            <p className="text-sm text-red-500">{errors.pais}</p>
           )}
         </div>
       </div>
 
-      <div className="flex justify-end pt-4">
-        <Button 
+      <div className="flex justify-end pt-6">
+        <Button
           onClick={validateAndNext}
-          className="bg-primary hover:bg-consware-green-active text-primary-foreground font-medium px-6"
+          className="flex items-center gap-2 bg-consware-green hover:bg-consware-green-active"
         >
           Continuar
-          <ChevronRight className="w-4 h-4 ml-2" />
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

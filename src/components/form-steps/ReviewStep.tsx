@@ -2,6 +2,13 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Send, Building2, User, UserCheck } from "lucide-react";
 import { CompanyFormData } from "../CompanyRegistrationForm";
 
+const COUNTRIES = [
+  { label: "Colombia", value: "COL" },
+  { label: "Panamá", value: "PAN" },
+  { label: "México", value: "MEX" },
+  { label: "Perú", value: "PER" },
+];
+
 interface ReviewStepProps {
   data: CompanyFormData;
   onSubmit: () => void;
@@ -10,6 +17,11 @@ interface ReviewStepProps {
 }
 
 export default function ReviewStep({ data, onSubmit, onPrev, isSubmitting }: ReviewStepProps) {
+  const getCountryName = (countryCode: string) => {
+    const country = COUNTRIES.find(c => c.value === countryCode);
+    return country ? country.label : countryCode;
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-consware-bg-content rounded-lg p-4 border border-consware-gray-border">
@@ -31,20 +43,8 @@ export default function ReviewStep({ data, onSubmit, onPrev, isSubmitting }: Rev
             <p className="font-medium text-consware-dark">{data.celular}</p>
           </div>
           <div>
-            <span className="text-consware-gray-primary">Código Postal:</span>
-            <p className="font-medium text-consware-dark">{data.codigoPostal}</p>
-          </div>
-          <div>
             <span className="text-consware-gray-primary">País:</span>
-            <p className="font-medium text-consware-dark">{data.pais}</p>
-          </div>
-          <div>
-            <span className="text-consware-gray-primary">Ciudad:</span>
-            <p className="font-medium text-consware-dark">{data.ciudad}</p>
-          </div>
-          <div className="sm:col-span-2">
-            <span className="text-consware-gray-primary">Dirección:</span>
-            <p className="font-medium text-consware-dark">{data.direccion}, {data.barrio}</p>
+            <p className="font-medium text-consware-dark">{getCountryName(data.pais)}</p>
           </div>
         </div>
       </div>

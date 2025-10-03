@@ -31,6 +31,8 @@ export default function LegalRepresentativeStep({
     }
     if (!data.representanteLegal.celular.trim()) {
       newErrors.celular = "El celular es requerido";
+    } else if (data.representanteLegal.celular.length !== 10) {
+      newErrors.celular = "El celular debe tener exactamente 10 dígitos";
     }
     if (!data.representanteLegal.correoElectronico.trim()) {
       newErrors.correoElectronico = "El correo electrónico es requerido";
@@ -67,11 +69,23 @@ export default function LegalRepresentativeStep({
         </Label>
         <Input
           id="rep-identificacion"
-          type="text"
-          placeholder="1001918162"
+          type="number"
+          placeholder="Ej: 12345678 (cédula de ciudadanía)"
           value={data.representanteLegal.identificacion}
-          onChange={(e) => handleInputChange("identificacion", e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ''); // Solo números
+            handleInputChange("identificacion", value);
+          }}
           className={errors.identificacion ? "border-destructive" : ""}
+          onKeyDown={(e) => {
+            // Permitir solo números, backspace, delete, tab, escape, enter
+            if (![
+              'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+              'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+            ].includes(e.key) && !/^[0-9]$/.test(e.key)) {
+              e.preventDefault();
+            }
+          }}
         />
         {errors.identificacion && (
           <p className="text-xs text-destructive">{errors.identificacion}</p>
@@ -85,7 +99,7 @@ export default function LegalRepresentativeStep({
         <Input
           id="rep-nombreCompleto"
           type="text"
-          placeholder="DALUWI TORRES"
+          placeholder="Ej: Juan Carlos Pérez García"
           value={data.representanteLegal.nombreCompleto}
           onChange={(e) => handleInputChange("nombreCompleto", e.target.value)}
           className={errors.nombreCompleto ? "border-destructive" : ""}
@@ -102,10 +116,25 @@ export default function LegalRepresentativeStep({
         <Input
           id="rep-celular"
           type="tel"
-          placeholder="3104598210"
+          placeholder="Ej: 3001234567 (celular de 10 dígitos)"
           value={data.representanteLegal.celular}
-          onChange={(e) => handleInputChange("celular", e.target.value)}
+          onChange={(e) => {
+            const value = e.target.value.replace(/\D/g, ''); // Solo números
+            if (value.length <= 10) { // Limitar a 10 dígitos
+              handleInputChange("celular", value);
+            }
+          }}
           className={errors.celular ? "border-destructive" : ""}
+          maxLength={10}
+          onKeyDown={(e) => {
+            // Permitir solo números, backspace, delete, tab, escape, enter
+            if (![
+              'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
+              'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'
+            ].includes(e.key) && !/^[0-9]$/.test(e.key)) {
+              e.preventDefault();
+            }
+          }}
         />
         {errors.celular && (
           <p className="text-xs text-destructive">{errors.celular}</p>
@@ -119,7 +148,7 @@ export default function LegalRepresentativeStep({
         <Input
           id="rep-correoElectronico"
           type="email"
-          placeholder="dtorres@consware.com.co"
+          placeholder="Ej: juan.perez@empresa.com.co"
           value={data.representanteLegal.correoElectronico}
           onChange={(e) => handleInputChange("correoElectronico", e.target.value)}
           className={errors.correoElectronico ? "border-destructive" : ""}
